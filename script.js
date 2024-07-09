@@ -19,6 +19,9 @@ const eatSound = new Audio('eat.mp3');
 const gameOverSound = new Audio('gameover.mp3');
 
 document.addEventListener('keydown', changeDirection);
+canvas.addEventListener('touchstart', handleTouchStart, false);
+canvas.addEventListener('touchmove', handleTouchMove, false);
+canvas.addEventListener('touchend', handleTouchEnd, false);
 
 function changeDirection(event) {
     const key = event.keyCode;
@@ -30,6 +33,43 @@ function changeDirection(event) {
         direction = 'RIGHT';
     } else if (key === 40 && direction !== 'UP') {
         direction = 'DOWN';
+    }
+}
+
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
+
+function handleTouchStart(event) {
+    event.preventDefault();
+    touchStartX = event.touches[0].clientX;
+    touchStartY = event.touches[0].clientY;
+}
+
+function handleTouchMove(event) {
+    event.preventDefault();
+    touchEndX = event.touches[0].clientX;
+    touchEndY = event.touches[0].clientY;
+}
+
+function handleTouchEnd(event) {
+    event.preventDefault();
+    let deltaX = touchEndX - touchStartX;
+    let deltaY = touchEndY - touchStartY;
+
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        if (deltaX > 0 && direction !== 'LEFT') {
+            direction = 'RIGHT';
+        } else if (deltaX < 0 && direction !== 'RIGHT') {
+            direction = 'LEFT';
+        }
+    } else {
+        if (deltaY > 0 && direction !== 'UP') {
+            direction = 'DOWN';
+        } else if (deltaY < 0 && direction !== 'DOWN') {
+            direction = 'UP';
+        }
     }
 }
 
